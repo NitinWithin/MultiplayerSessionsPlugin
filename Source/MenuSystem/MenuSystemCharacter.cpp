@@ -160,7 +160,7 @@ void AMenuSystemCharacter::CreateGameSession()
 		OnlineSessionInterface->DestroySession(NAME_GameSession);
 	}
 
-	//Add delegate to delegate list before creating session
+	
 	OnlineSessionInterface->AddOnCreateSessionCompleteDelegate_Handle(CreateSessionCompleteDelegate);
 
 	// Creating the settings for our session
