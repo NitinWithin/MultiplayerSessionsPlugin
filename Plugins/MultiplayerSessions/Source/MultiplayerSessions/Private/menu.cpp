@@ -68,25 +68,28 @@ void Umenu::NativeDestruct()
 
 void Umenu::OnCreateSession(bool bWasSuccessful)
 {
+	if (bWasSuccessful && GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(0, 10, FColor::Red, FString(TEXT("session created")));
 
+		UWorld* world = GetWorld();
+		if (world)
+		{
+			world->ServerTravel("/Game/ThirdPerson/Maps/Lobby?Listen");
+		}
+	}
+	else if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(0, 10, FColor::Red, FString(TEXT("session not created")));
+	}
 }
 
 void Umenu::HostButtonOnClick()
 {
-	UE_LOG(LogTemp, Error, TEXT("hostButtonClicked"));
 
 	if (MultiplayerSessionSubsystem)
 	{
 		MultiplayerSessionSubsystem->CreateSession(NumOfConnections, MatchType);
-		UWorld* world = GetWorld();
-		if (world)
-		{
-			if (GEngine)
-			{
-				GEngine->AddOnScreenDebugMessage(0, 10, FColor::Red, FString(TEXT("Hosting session clicked")));
-			}
-			world->ServerTravel("/Game/ThirdPerson/Maps/Lobby?Listen");
-		}
 	}
 }
 
