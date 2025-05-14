@@ -2,6 +2,9 @@
 
 #include "MenuSystemGameMode.h"
 #include "MenuSystemCharacter.h"
+#include "GameFramework/GameStateBase.h"
+#include "GameFramework/PlayerState.h"
+#include "MultiplayerSessionSubsystem.h"
 #include "UObject/ConstructorHelpers.h"
 
 AMenuSystemGameMode::AMenuSystemGameMode()
@@ -11,5 +14,49 @@ AMenuSystemGameMode::AMenuSystemGameMode()
 	if (PlayerPawnBPClass.Class != NULL)
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
+	}
+}
+
+void AMenuSystemGameMode::PostLogin(APlayerController* NewPlayer)
+{
+	Super::PostLogin(NewPlayer);
+
+	if (GameState)
+	{
+		int32 NumOfPlayers = GameState->PlayerArray.Num();     
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(
+				1, 60.f, FColor::Yellow, FString::Printf(TEXT("Num of players in Lobby: %d"), NumOfPlayers));
+
+			APlayerState* playerState = NewPlayer->GetPlayerState<APlayerState>();
+			if (playerState)
+			{
+				FString playerName = playerState->GetPlayerName();
+				GEngine->AddOnScreenDebugMessage(
+					1, 60.f, FColor::Yellow, FString::Printf(TEXT("%s has joined the game"), *playerName));
+			}
+			
+		}
+
+		if (NumOfPlayers >= 2)
+		{
+			MultiplayerSubsystem->StartSession();
+		}
+	}
+
+
+}
+
+void AMenuSystemGameMode::Logout(AController* Exiting)
+{
+	Super::Logout(Exiting);
+
+	APlayerState* playerState = Exiting->GetPlayerState<APlayerState>();
+	if (playerState)
+	{
+		FString playerName = playerState->GetPlayerName();
+		GEngine->AddOnScreenDebugMessage(
+			1, 60.f, FColor::Yellow, FString::Printf(TEXT("%s has Left the game"), *playerName));
 	}
 }
