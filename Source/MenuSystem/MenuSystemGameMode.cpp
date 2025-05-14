@@ -4,6 +4,7 @@
 #include "MenuSystemCharacter.h"
 #include "GameFramework/GameStateBase.h"
 #include "GameFramework/PlayerState.h"
+#include "MultiplayerSessionSubsystem.h"
 #include "UObject/ConstructorHelpers.h"
 
 AMenuSystemGameMode::AMenuSystemGameMode()
@@ -36,6 +37,11 @@ void AMenuSystemGameMode::PostLogin(APlayerController* NewPlayer)
 					1, 60.f, FColor::Yellow, FString::Printf(TEXT("%s has joined the game"), *playerName));
 			}
 			
+		}
+
+		if (NumOfPlayers >= 2)
+		{
+			MultiplayerSubsystem->StartSession();
 		}
 	}
 

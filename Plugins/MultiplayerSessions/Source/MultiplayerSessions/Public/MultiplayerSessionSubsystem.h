@@ -84,5 +84,8 @@ private:
 					JoinSessionCompleteDelegateHandle,
 					DestroySessionCompleteDelegateHandle,
 					StartSessionCompleteDelegateHandle;
-	
+
+	bool bCreateSessionOnDestroy{ false };
+	int32 LastNumConnections;
+	FString LastMatchType;	
 };
